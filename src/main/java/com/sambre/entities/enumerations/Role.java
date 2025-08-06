@@ -2,7 +2,7 @@ package com.sambre.entities.enumerations;
 
 
 public enum Role {
-    TRANSPORTEUR,
-    ENTREPRISE,
+    CANDIDATE,
+    COMPANY,
     ADMIN;
 }

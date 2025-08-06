@@ -9,24 +9,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CompanyRepository extends CrudRepository<Company, Long> {
-    // Trouver une entreprise par son numéro d'identification fiscale
+public interface CompanyRepository extends CrudRepository<Company, String> {
+
     Optional<Company> findByFiscalIdentificationNumber(String fiscalIdentificationNumber);
-
-    // Trouver une entreprise par email (hérité de User)
     Optional<Company> findByEmail(String email);
-
-    // Trouver les entreprises par secteur d'activité
     List<Company> findBySector(String sector);
 
-    // Rechercher par secteur avec mot-clé partiel (case insensitive)
     @Query("SELECT c FROM Company c WHERE LOWER(c.sector) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Company> searchBySectorKeyword(String keyword);
 
-    // Vérifier l'existence d'une entreprise par son numéro fiscal
     boolean existsByFiscalIdentificationNumber(String fiscalIdentificationNumber);
-
-    // Vérifier l'existence d'une entreprise par email
     boolean existsByEmail(String email);
 
     @EntityGraph(attributePaths = {"jobOffers"})
@@ -34,4 +26,20 @@ public interface CompanyRepository extends CrudRepository<Company, Long> {
 
     @EntityGraph(attributePaths = {"jobOffers"})
     List<Company> findAllWithJobOffers();
+
+    Optional<Company> findByName(String name);
+
+    List<Company> findByNameContainingIgnoreCase(String namePart);
+
+    @Query("SELECT c FROM Company c WHERE SIZE(c.jobOffers) >= :minOffers")
+    List<Company> findCompaniesWithMinJobOffers(int minOffers);
+
+    @Query("SELECT c FROM Company c WHERE c.jobOffers IS EMPTY")
+    List<Company> findCompaniesWithoutJobOffers();
+
+    List<Company> findByLocationIgnoreCase(String location);
+
+    long countBySector(String sector);
+
+    boolean existsByName(String name);
 }

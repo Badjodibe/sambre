@@ -1,21 +1,22 @@
 package com.sambre.services.security;
 
-
 import com.sambre.config.messaging.email.EmailService;
 import com.sambre.config.security.jwt.JwtService;
 import com.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.dtos.security.AuthenticateResponse;
 import com.sambre.dtos.security.TokenResponse;
-import com.sambre.dtos.user.CandidateResponse;
 import com.sambre.dtos.user.CandidateRequest;
-import com.sambre.entities.enumerations.EmailTemplateName;
+import com.sambre.dtos.user.CandidateResponse;
+import com.sambre.dtos.user.CompanyRequest;
+import com.sambre.dtos.user.CompanyResponse;
 import com.sambre.entities.user.User;
+import com.sambre.services.user.CandidateService;
+import com.sambre.services.user.CompanyService;
 import com.sambre.services.user.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -29,30 +30,24 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final TokenService tokenService;
+    private final com.sambre.services.security.TokenService  tokenService;
     private final EmailService emailService;
     private final UserService userService;
+    private final CandidateService candidateService;
+    private final CompanyService companyService;
 
-
-    // Fonction pour générer les 6 numéros d'activations
     private String generateActivationCode(int length) {
         String characters = "0123456789";
-        StringBuilder codeBuilder = new StringBuilder();
         SecureRandom secureRandom = new SecureRandom();
-
-        for (int i=0; i<length; i++){
-            int randomIndex = secureRandom.nextInt(characters.length());
-            codeBuilder.append(characters.charAt(randomIndex));
+        StringBuilder codeBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = secureRandom.nextInt(characters.length());
+            codeBuilder.append(characters.charAt(index));
         }
-
         return codeBuilder.toString();
-
     }
 
-    // Enregistrer le token généré dans la base de données
-    private String generateAndSaveActivationToken(
-            CandidateRequest user) {
-        // generate a token
+    private String generateAndSaveActivationToken(User user) {
         String generatedToken = generateActivationCode(6);
         TokenResponse token = TokenResponse.builder()
                 .createAt(LocalDateTime.now())
@@ -60,66 +55,75 @@ public class AuthenticationService {
                 .token(generatedToken)
                 .usersId(user.getId())
                 .build();
-
         tokenService.save(token);
-
         return generatedToken;
     }
 
-    public void sendValidationEmail(CandidateRequest user) throws MessagingException {
-        var newToken = generateAndSaveActivationToken(user);
-
-        String fullName = user.getPrenom() + " " + user.getNom();
-
-        // send email
-        emailService.sendEmail(
-                user.getEmail(),
-                fullName,
-                "Validation de votre mail sur LivraiX",
-                EmailTemplateName.ACTIVATE_ACCOUNT,
-                newToken
-        );
-    }
-
-
+//    public void sendValidationEmail(User user) throws MessagingException {
+//        String newToken = generateAndSaveActivationToken(user);
+//
+//        String fullName = user.getFirstname() + " " + user.getLastname();
+//
+//        emailService.sendEmail(
+//                user.getEmail(),
+//                fullName,
+//                "Validation de votre compte sur Sambre",
+//                EmailTemplateName.ACTIVATE_ACCOUNT,
+//                newToken
+//        );
+//    }
 
     public AuthenticateResponse authenticate(AuthenticateRequest request) {
-        var auth = authenticationManager.authenticate(
+        var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
 
-        var claims = new HashMap<String, Object>();
-        var user = ((User) auth.getPrincipal());
+        User user = (User) authentication.getPrincipal();
 
+        var claims = new HashMap<String, Object>();
         claims.put("fullName", user.fullName());
         claims.put("userId", user.getId());
+        claims.put("role", user.getRole().name()); // ROLE_RECRUITER ou ROLE_CANDIDATE par exemple
 
-        var jwtToken = jwtService.generateToken(claims, user);
+        String jwt = jwtService.generateToken(claims, user);
 
         return AuthenticateResponse.builder()
-                .token(jwtToken)
+                .token(jwt)
                 .build();
     }
 
-    public void activateAccount(String token) throws MessagingException {
+    /*public void activateAccount(String token) throws MessagingException {
         TokenResponse savedToken = tokenService.findByToken(token);
-        Optional<CandidateResponse> usersDTO = userService.findById(savedToken.getUsersId());
+        Optional<User> userOptional = userService.findById(Long.valueOf(savedToken.getUsersId()));
 
-        if (LocalDateTime.now().isAfter(savedToken.getExpireAt())){
-            sendValidationEmail(userResponse.get());
-            throw new RuntimeException("Activation token has expired. A new token has been sent to the same email adress ");
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException("User not found.");
         }
 
-        // Activer accountBlocked pour la validation de mail du users
-        userService.activeAccountBlocked(savedToken.getUsersId());
+        User user = userOptional.get();
 
-        // Mettre à jour la date de validité du token
+        if (LocalDateTime.now().isAfter(savedToken.getExpireAt())) {
+            sendValidationEmail(user);
+            throw new RuntimeException("Token expiré. Un nouveau token a été envoyé par email.");
+        }
+
+        userService.activeAccountBlocked(user.getId());
+
         savedToken.setValidateAt(LocalDateTime.now());
-
-        // Faire le update du token
         tokenService.updateToken(savedToken.getId(), savedToken);
+    }
+
+     */
+    public Optional<CandidateResponse> registerCandidate(CandidateRequest candidateRequest) throws MessagingException {
+        return null;
+    }
+
+    public Optional<CompanyResponse> registerCompany(CompanyRequest companyRequest) throws MessagingException {
+   
+        return null;
+
     }
 }

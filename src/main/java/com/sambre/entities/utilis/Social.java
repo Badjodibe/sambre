@@ -11,14 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Social {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     //@NotBlank(message = "Le nom ne peut pas être vide ou null")
     private String name;
-
     //@NotBlank(message = "Le prénom ne peut pas être vide ou null")
     private String url;
 }

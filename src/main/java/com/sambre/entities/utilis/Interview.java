@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Interview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private LocalDateTime scheduledDate;
     private String location; // ou lien visio

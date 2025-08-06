@@ -1,59 +1,84 @@
 package com.sambre.services.offer;
 
-
-import com.sambre.entities.offers.JobOffer;
+import com.sambre.dtos.offers.JobOfferResponse;
 import com.sambre.entities.offers.JobOfferRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.sambre.mapper.offer.JobOfferMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class JobOfferService {
 
     private final JobOfferRepository jobOfferRepository;
+    private final JobOfferMapper jobOfferMapper;
 
-    public JobOffer createJobOffer(JobOffer jobOffer) {
-        return jobOfferRepository.save(jobOffer);
+    // ✅ 1. Trouver toutes les offres (avec @EntityGraph sur company)
+    public List<JobOfferResponse> findAll() {
+        return jobOfferRepository.findAll()
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<JobOffer> getAllJobOffers() {
-        return jobOfferRepository.findAll();
-    }
-
-    public Optional<JobOffer> getJobOfferById(Long id) {
-        return jobOfferRepository.findById(id);
-    }
-
-    public JobOffer updateJobOffer(Long id, JobOffer updatedOffer) {
+    // ✅ 2. Trouver une offre par ID (avec @EntityGraph sur company)
+    public Optional<JobOfferResponse> findById(Long id) {
         return jobOfferRepository.findById(id)
-                .map(existing -> {
-                    existing.setTitle(updatedOffer.getTitle());
-                    existing.setDescription(updatedOffer.getDescription());
-                    existing.setLocation(updatedOffer.getLocation());
-                    existing.setSalary(updatedOffer.getSalary());
-                    existing.setSkills(updatedOffer.getSkills());
-                    existing.setCompany(updatedOffer.getCompany());
-                    return jobOfferRepository.save(existing);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("JobOffer not found"));
+                .map(jobOfferMapper::toJobResponse);
     }
 
-    public void deleteJobOffer(Long id) {
-        jobOfferRepository.deleteById(id);
+    // ✅ 3. Recherche par mot-clé dans le titre
+    public List<JobOfferResponse> searchByTitle(String keyword) {
+        return jobOfferRepository.findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<JobOffer> findByTitleContainingIgnoreCase(String keyword) {
-        return jobOfferRepository.findByTitleContainingIgnoreCase(keyword);
+    // ✅ 4. Trouver les offres d'une entreprise
+    public List<JobOfferResponse> findByCompanyId(Long companyId) {
+        return jobOfferRepository.findByCompanyId(companyId)
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<JobOffer> findByCompanyId(Long companyId) {
-        return jobOfferRepository.findByCompanyId(companyId);
+    // ✅ 5. Offres récentes (ex: top 5 dernières offres)
+    public List<JobOfferResponse> findTopNByCreatedAt(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return jobOfferRepository.findTopNOrderByCreatedAtDesc(pageable)
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<JobOffer> findLatestJobOffers(int limit) {
-        return jobOfferRepository.findTopNOrderByCreatedAtDesc(limit);
+    // ✅ 6. Trouver une offre avec les infos complètes de l'entreprise
+    public Optional<JobOfferResponse> findWithCompanyById(Long id) {
+        return jobOfferRepository.findWithCompanyById(id)
+                .map(jobOfferMapper::toJobResponse);
     }
+
+    // ✅ 7. Trouver les offres par région
+    public List<JobOfferResponse> findByRegion(String region) {
+        return jobOfferRepository.findByRegionIgnoreCase(region)
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
+    }
+
+    // ✅ 8. Trouver les offres par type de contrat
+    public List<JobOfferResponse> findByContractType(String contractType) {
+        return jobOfferRepository.findByContractTypeIgnoreCase(contractType)
+                .stream()
+                .map(jobOfferMapper::toJobResponse)
+                .collect(Collectors.toList());
+    }
+
+
 }

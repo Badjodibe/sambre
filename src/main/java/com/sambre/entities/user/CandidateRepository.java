@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CandidateRepository extends CrudRepository<Candidate, Long> {
+public interface CandidateRepository extends CrudRepository<Candidate, String> {
     // Trouver un candidat par son email (hérité de User)
     Optional<Candidate> findByEmail(String email);
 

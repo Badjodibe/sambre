@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface EventParticipantRepository extends CrudRepository<EventParticipant, Long> {
+public interface EventParticipantRepository extends CrudRepository<EventParticipant, String> {
 
     @EntityGraph(attributePaths = {"participant", "event"})
     List<EventParticipant> findByParticipantId(Long candidateId);

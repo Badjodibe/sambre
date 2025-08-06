@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class SavedJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
     private Candidate candidate;

@@ -76,8 +76,8 @@ public class TokenService implements ServiceInterfaceImpl<TokenResponse> {
         return tokenMapper.toDTO(token1);
     }
 
-    /*
-    public TokenResponse findByToken(TokenResponse token){
+
+    public TokenResponse findByToken(String token){
         var token1 = tokenRepository.findByToken(token)
                 .orElseThrow(
                         () -> new RuntimeException("Invalid token")
@@ -86,6 +86,6 @@ public class TokenService implements ServiceInterfaceImpl<TokenResponse> {
         return tokenMapper.toDTO(token1);
     }
 
-     */
+
 
 }
