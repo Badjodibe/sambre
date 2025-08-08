@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Social {
+public class Social{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
