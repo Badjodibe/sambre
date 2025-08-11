@@ -3,7 +3,7 @@ logging:
     org.springframework: DEBUG
     org.springframework.web: DEBUG
     #org.springframework.security: DEBUG
-    root: DEBUG
+    #root: DEBUG
 
 server:
   port: 8081
@@ -15,12 +15,12 @@ jwt:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sambre
-    username: dibe
+    username: postgres
     password: sambre-passe
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:

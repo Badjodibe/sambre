@@ -1,4 +1,4 @@
-package com.sambre.sambre.entities.utilis;
+package com.sambre.sambre.entities.utils;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,12 +12,12 @@ import lombok.Setter;
 @Setter
 @Entity
 @Builder
-public class Social {
+public class Skills {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    //@NotBlank(message = "Le nom ne peut pas être vide ou null")
+
+    private int years;
     private String name;
-    //@NotBlank(message = "Le prénom ne peut pas être vide ou null")
-    private String url;
+    private String level;
 }

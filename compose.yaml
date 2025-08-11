@@ -4,6 +4,6 @@ services:
     environment:
       - 'POSTGRES_DB=sambre'
       - 'POSTGRES_PASSWORD=sambre-passe'
-      - 'POSTGRES_USER=dibe'
+      - 'POSTGRES_USER=postgres'
     ports:
       - '5432'

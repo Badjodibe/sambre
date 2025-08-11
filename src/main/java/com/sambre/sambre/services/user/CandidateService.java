@@ -18,7 +18,7 @@ public class CandidateService {
 
     private final CandidateRepository candidateRepository;
     private final CandidateMapper candidateMapper;
-
+    /*
     public List<CandidateResponse> findAllWithExperiences() {
         return candidateRepository.findAllWithExperiences()
                 .stream()
@@ -31,6 +31,7 @@ public class CandidateService {
                 .map(candidateMapper::toCandidateResponse);
     }
 
+    */
     public Optional<CandidateResponse> findByEmail(String email) {
         return candidateRepository.findByEmail(email)
                 .map(candidateMapper::toCandidateResponse);

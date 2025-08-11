@@ -1,6 +1,6 @@
-package com.sambre.sambre.entities.utilis;
+package com.sambre.sambre.entities.utils;
 
-import com.sambre.sambre.entities.user.User;
+import com.sambre.sambre.entities.offers.JobApplication;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,18 +12,15 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Builder
-public class Notification {
+public class Interview {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String message;
-    private boolean read = false;
+    private LocalDateTime scheduledDate;
+    private String location; // ou lien visio
 
     @ManyToOne
-    private User user;
-
-    private LocalDateTime createdAt;
-
-
+    private JobApplication jobApplication;
 }
+

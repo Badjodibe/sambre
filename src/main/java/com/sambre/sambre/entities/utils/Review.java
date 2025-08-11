@@ -1,4 +1,4 @@
-package com.sambre.sambre.entities.utilis;
+package com.sambre.sambre.entities.utils;
 
 import com.sambre.sambre.entities.user.Candidate;
 import com.sambre.sambre.entities.user.Company;

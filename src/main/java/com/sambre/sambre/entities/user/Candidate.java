@@ -2,7 +2,7 @@ package com.sambre.sambre.entities.user;
 
 import com.sambre.sambre.entities.events.EventParticipant;
 import com.sambre.sambre.entities.offers.JobApplication;
-import com.sambre.sambre.entities.utilis.Experience;
+import com.sambre.sambre.entities.utils.Experience;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

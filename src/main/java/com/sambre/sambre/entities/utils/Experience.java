@@ -1,7 +1,6 @@
-package com.sambre.sambre.entities.utilis;
+package com.sambre.sambre.entities.utils;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,9 +26,9 @@ public class Experience {
     private String description;
 
     //@NotBlank(message = "Le mot de passe ne peut pas être vide ou null")
-    private Date start;
+    private Date startDate;
 
-    private Date end;
+    private Date endDate;
 
     private String emplacement;
 

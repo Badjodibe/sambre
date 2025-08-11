@@ -4,12 +4,11 @@ package com.sambre.sambre.entities.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.sambre.sambre.entities.enumerations.Role;
-import com.sambre.sambre.entities.utilis.Social;
+import com.sambre.sambre.entities.utils.Social;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.security.Principal;

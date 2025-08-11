@@ -1,4 +1,4 @@
-package com.sambre.sambre.entities.utilis;
+package com.sambre.sambre.entities.utils;
 
 import com.sambre.sambre.entities.user.User;
 import jakarta.persistence.*;
@@ -12,17 +12,18 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Builder
-public class Message {
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne
-    private User sender;
+    private String message;
+    private boolean read = false;
 
     @ManyToOne
-    private User receiver;
+    private User user;
 
-    private String content;
-    private LocalDateTime timestamp;
+    private LocalDateTime createdAt;
+
+
 }
