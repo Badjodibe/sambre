@@ -3,9 +3,7 @@ package com.sambre.sambre.entities.offers;
 import com.sambre.sambre.entities.enumerations.JobOfferStatus;
 import com.sambre.sambre.entities.user.Company;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +13,8 @@ import java.util.List;
 @Setter
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobOffer {
 
     @Id
@@ -25,8 +25,9 @@ public class JobOffer {
     private String jobType; // Ex: "Full-time", "Part-time", "Contract", "Freelance", "Internship"
     private String employmentMode; // Ex: "Remote", "Onsite", "Hybrid"
     private String location;
-    // Qualifications
+    @ElementCollection
     private List<String> requiredSkills;
+
     private String experienceLevel; // Ex: "Junior", "Mid-level", "Senior"
     private int minYearsExperience;
     private String educationLevel; // Ex: "Bachelor's", "Master's", "PhD"

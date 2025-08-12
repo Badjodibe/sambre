@@ -10,13 +10,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-<<<<<<< HEAD:src/main/java/com/sambre/sambre/entities/utilis/Social.java
 @Entity
 @Builder
-public class Social {
-=======
 public class Social{
->>>>>>> origin/feature/repository_utilis:src/main/java/com/sambre/entities/utilis/Social.java
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

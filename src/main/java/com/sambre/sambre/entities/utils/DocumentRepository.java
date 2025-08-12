@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends CrudRepository<Document, String> {
     // Trouver tous les documents d'un candidat donné
-    List<Document> findByCandidateId(Long candidateId);
+    List<Document> findByCandidateId(String candidateId);
 
     // Trouver tous les documents d'un certain type (ex: pdf)
     List<Document> findByType(String type);

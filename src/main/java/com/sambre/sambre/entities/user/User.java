@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
+@AllArgsConstructor
 public class User implements UserDetails, Principal {
 
     @Id

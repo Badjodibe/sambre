@@ -5,10 +5,6 @@ import com.sambre.sambre.config.security.jwt.JwtService;
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
 import com.sambre.sambre.dtos.security.TokenResponse;
-import com.sambre.sambre.dtos.user.CandidateRequest;
-import com.sambre.sambre.dtos.user.CandidateResponse;
-import com.sambre.sambre.dtos.user.CompanyRequest;
-import com.sambre.sambre.dtos.user.CompanyResponse;
 import com.sambre.sambre.entities.user.User;
 import com.sambre.sambre.services.user.CandidateService;
 import com.sambre.sambre.services.user.CompanyService;
@@ -126,7 +122,7 @@ public class AuthenticationService {
         tokenService.updateToken(savedToken.getId(), savedToken);
     }
 
-     */
+
     public Optional<CandidateResponse> registerCandidate(CandidateRequest candidateRequest) throws MessagingException {
         return null;
     }
@@ -136,4 +132,6 @@ public class AuthenticationService {
         return null;
 
     }
+
+     */
 }

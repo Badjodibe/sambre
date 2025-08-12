@@ -2,9 +2,7 @@ package com.sambre.sambre.entities.offers;
 
 import com.sambre.sambre.entities.user.Candidate;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SavedJob {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -3,9 +3,6 @@ package com.sambre.sambre.web.security;
 
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
-import com.sambre.sambre.dtos.user.CandidateRequest;
-import com.sambre.sambre.dtos.user.CandidateResponse;
-import com.sambre.sambre.dtos.user.CompanyRequest;
 import com.sambre.sambre.services.security.AuthenticationService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -21,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-
+/*
     @GetMapping({"", "/"})
     public ResponseEntity<String> getAll(){
         return ResponseEntity.ok("ok");
@@ -48,6 +45,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
+
+
+ */
 //    @GetMapping("/valider-mail/{token}")
 //    public ResponseEntity<?> activateAccountBlock(@PathVariable String token) throws MessagingException {
 //        authenticationService.activateAccount(token);

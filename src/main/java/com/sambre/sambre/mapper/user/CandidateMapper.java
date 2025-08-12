@@ -1,24 +1,32 @@
 package com.sambre.sambre.mapper.user;
 
 
-import com.sambre.sambre.dtos.user.CandidateResponse;
+import com.sambre.sambre.dtos.user.CandidateDTO;
 import com.sambre.sambre.entities.user.Candidate;
+import com.sambre.sambre.mapper.event.EventParticipantMapper;
+import com.sambre.sambre.mapper.offer.JobApplicationMapper;
+import com.sambre.sambre.mapper.utils.ExperienceMapper;
+import com.sambre.sambre.mapper.utils.SocialMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                SocialMapper.class,              // pour mapper List<SocialDTO>
+                ExperienceMapper.class,          // pour mapper List<ExperienceDTO>
+                JobApplicationMapper.class,      // pour mapper List<JobApplicationDTO>
+                EventParticipantMapper.class     // pour mapper List<EventParticipantDTO>
+        }
+)
 public interface CandidateMapper {
 
     CandidateMapper INSTANCE = Mappers.getMapper(CandidateMapper.class);
 
-    // Convert DTO to Entity
-    Candidate toEntity(CandidateResponse dto);
+    // Entity -> DTO
+    CandidateDTO toDTO(Candidate entity);
 
-    // Convert Entity to Response
-    CandidateResponse toCandidateResponse(Candidate candidate);
-
-    // Convert List<Entity> to List<Response>
-    List<CandidateResponse> toCandidateResponseList(List<Candidate> candidates);
+    // DTO -> Entity
+    Candidate toEntity(CandidateDTO dto);
 }
+

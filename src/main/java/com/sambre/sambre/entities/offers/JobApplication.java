@@ -4,15 +4,15 @@ package com.sambre.sambre.entities.offers;
 import com.sambre.sambre.entities.enumerations.ApplicationStatus;
 import com.sambre.sambre.entities.user.Candidate;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobApplication {
 
     @Id

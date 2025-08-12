@@ -1,10 +1,8 @@
 package com.sambre.sambre.services.user;
 
 
-import com.sambre.sambre.dtos.user.CandidateResponse;
 import com.sambre.sambre.entities.user.Candidate;
 import com.sambre.sambre.entities.user.CandidateRepository;
-import com.sambre.sambre.mapper.user.CandidateMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +14,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CandidateService {
 
-    private final CandidateRepository candidateRepository;
-    private final CandidateMapper candidateMapper;
     /*
-    public List<CandidateResponse> findAllWithExperiences() {
-        return candidateRepository.findAllWithExperiences()
-                .stream()
-                .map(candidateMapper::toCandidateResponse)
-                .collect(Collectors.toList());
-    }
+   private final CandidateRepository candidateRepository;
+   private final CandidateMapper candidateMapper;
 
-    public Optional<CandidateResponse> findByIdWithExperiences(Long id) {
-        return candidateRepository.findByIdWithExperiences(id)
-                .map(candidateMapper::toCandidateResponse);
-    }
+   public List<CandidateResponse> findAllWithExperiences() {
+       return candidateRepository.findAllWithExperiences()
+               .stream()
+               .map(candidateMapper::toCandidateResponse)
+               .collect(Collectors.toList());
+   }
 
-    */
+   public Optional<CandidateResponse> findByIdWithExperiences(Long id) {
+       return candidateRepository.findByIdWithExperiences(id)
+               .map(candidateMapper::toCandidateResponse);
+   }
+
     public Optional<CandidateResponse> findByEmail(String email) {
         return candidateRepository.findByEmail(email)
                 .map(candidateMapper::toCandidateResponse);
@@ -67,5 +65,9 @@ public class CandidateService {
     public void delete(String id) {
         candidateRepository.deleteById(id);
     }
+
+
+
+    */
 }
 
