@@ -6,14 +6,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExperienceRepository extends CrudRepository<Experience, String> {
     // Trouver toutes les expériences par utilisateur
-    Iterable<Experience> findByUserId(String userId);
+//    Iterable<Experience> findByUserId(String userId);
 
     // Trouver les expériences par titre
     Iterable<Experience> findByTitle(String title);
 
-    // Supprimer les expériences par utilisateur
-    void deleteByUserId(String userId);
+    // Supprimer les expériences par titre
+    void deleteByTitle(String title);
 
-    // Compter les expériences par utilisateur
-    long countByUserId(String userId);
+    // Compter les expériences par titre
+    long countByTitle(String title);
 }
