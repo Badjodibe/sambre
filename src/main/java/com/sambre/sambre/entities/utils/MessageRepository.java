@@ -1,11 +1,26 @@
 package com.sambre.sambre.entities.utils;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MessageRepository extends CrudRepository<Message, String> {
-    Iterable<Message> findBySenderId(String senderId);
-    Iterable<Message> findByReceiverId(String receiverId);
-    Iterable<Message> findBySenderIdAndReceiverId(String senderId, String receiverId);
+
+    // Récupérer tous les messages envoyés par un utilisateur
+    List<Message> findBySenderId(String senderId);
+
+    // Récupérer tous les messages reçus par un utilisateur
+    List<Message> findByReceiverId(String receiverId);
+
+    // Récupérer l'historique des messages entre deux utilisateurs (dans les deux sens)
+    List<Message> findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimestampAsc(
+            String senderId1, String receiverId1,
+            String senderId2, String receiverId2
+    );
+
+    // Récupérer les messages contenant un certain mot clé (dans le contenu)
+    List<Message> findByContentContainingIgnoreCase(String keyword);
 }

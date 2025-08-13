@@ -18,11 +18,13 @@ import java.util.Optional;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-/*
+
     @GetMapping({"", "/"})
     public ResponseEntity<String> getAll(){
         return ResponseEntity.ok("ok");
     }
+    /*
+
     @PostMapping("/registerCandidate")
     public Optional<CandidateResponse> registerCandidate(@RequestBody CandidateRequest candidateRequest) throws MessagingException {
         return authenticationService.registerCandidate(candidateRequest);

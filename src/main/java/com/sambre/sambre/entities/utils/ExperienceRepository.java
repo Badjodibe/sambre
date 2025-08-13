@@ -1,19 +1,23 @@
 package com.sambre.sambre.entities.utils;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ExperienceRepository extends CrudRepository<Experience, String> {
-    // Trouver toutes les expériences par utilisateur
-    Iterable<Experience> findByUserId(String userId);
 
-    // Trouver les expériences par titre
-    Iterable<Experience> findByTitle(String title);
+    // Récupérer toutes les expériences par titre
+    List<Experience> findByTitleContainingIgnoreCase(String title);
 
-    // Supprimer les expériences par utilisateur
-    void deleteByUserId(String userId);
+    // Récupérer toutes les expériences par entité (entreprise/organisation)
+    List<Experience> findByEntityContainingIgnoreCase(String entity);
 
-    // Compter les expériences par utilisateur
-    long countByUserId(String userId);
+    // Récupérer toutes les expériences par emplacement
+    List<Experience> findByEmplacementContainingIgnoreCase(String emplacement);
+
+    // Récupérer les expériences actives (sans date de fin)
+    List<Experience> findByEndDateIsNull();
 }
