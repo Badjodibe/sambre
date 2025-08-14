@@ -18,6 +18,10 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
+    public Company register(Company company) {
+        return companyRepository.save(company);
+    }
+
     public Optional<Company> getById(String id) {
         return companyRepository.findById(id);
     }

@@ -11,51 +11,56 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Optional;
 
-@RequiredArgsConstructor
+import com.sambre.sambre.dtos.user.CandidateDTO;
+import com.sambre.sambre.dtos.user.CompanyDTO;
+
+import org.springframework.web.bind.annotation.*;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
+
     private final AuthenticationService authenticationService;
 
+    /** 🔹 Test route */
     @GetMapping({"", "/"})
-    public ResponseEntity<String> getAll(){
+    public ResponseEntity<String> getAll() {
         return ResponseEntity.ok("ok");
     }
-    /*
 
-    @PostMapping("/registerCandidate")
-    public Optional<CandidateResponse> registerCandidate(@RequestBody CandidateRequest candidateRequest) throws MessagingException {
-        return authenticationService.registerCandidate(candidateRequest);
+    /** 🔹 Inscription Candidat */
+    @PostMapping("/register-candidate")
+    public ResponseEntity<CandidateDTO> registerCandidate(@RequestBody @Valid CandidateDTO candidateRequest) throws MessagingException {
+        CandidateDTO savedCandidate = authenticationService.registerCandidate(candidateRequest);
+        return ResponseEntity.ok(savedCandidate);
     }
 
-    @PostMapping("/registerCompany")
-    public void registerCompany(@RequestBody CompanyRequest companyRequest) throws MessagingException {
-        authenticationService.registerCompany(companyRequest);
+    /** 🔹 Inscription Entreprise */
+    @PostMapping("/register-company")
+    public ResponseEntity<CompanyDTO> registerCompany(@RequestBody @Valid CompanyDTO companyRequest) throws MessagingException {
+        CompanyDTO savedCompany = authenticationService.registerCompany(companyRequest);
+        return ResponseEntity.ok(savedCompany);
     }
 
-    @PostMapping("/registerAdmin")
-    public Optional<CandidateResponse> registerAdmin(@RequestBody CandidateRequest candidateRequest) throws MessagingException {
-        return authenticationService.registerCandidate(candidateRequest);
-    }
+    /** 🔹 Inscription Admin (reprend logique candidat) */
+//    @PostMapping("/register-admin")
+//    public ResponseEntity<CandidateDTO> registerAdmin(@RequestBody @Valid CandidateDTO candidateRequest) throws MessagingException {
+//        CandidateDTO savedAdmin = authenticationService.registerAdmin(candidateRequest);
+//        return ResponseEntity.ok(savedAdmin);
+//    }
 
+    /** 🔹 Connexion */
     @PostMapping("/login")
-    public ResponseEntity<AuthenticateResponse> authenticate(
-            @RequestBody @Valid AuthenticateRequest request
-    ){
+    public ResponseEntity<AuthenticateResponse> authenticate(@RequestBody @Valid AuthenticateRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
-
-
- */
-//    @GetMapping("/valider-mail/{token}")
-//    public ResponseEntity<?> activateAccountBlock(@PathVariable String token) throws MessagingException {
-//        authenticationService.activateAccount(token);
-//        return ResponseEntity.accepted().build();
-//    }
-
-
-
+    /** 🔹 Activation de compte via lien mail */
+    @GetMapping("/validate-email/{token}")
+    public ResponseEntity<Void> activateAccount(@PathVariable String token) throws MessagingException {
+        authenticationService.activateAccount(token);
+        return ResponseEntity.accepted().build();
+    }
 }

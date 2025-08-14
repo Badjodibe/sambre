@@ -1,9 +1,11 @@
 package com.sambre.sambre.services.user;
 
 
+import com.sambre.sambre.dtos.user.CandidateDTO;
 import com.sambre.sambre.entities.user.Candidate;
 import com.sambre.sambre.entities.user.CandidateRepository;
-import lombok.RequiredArgsConstructor;
+import com.sambre.sambre.mapper.user.CandidateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,63 +13,73 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CandidateService {
 
-    /*
-   private final CandidateRepository candidateRepository;
-   private final CandidateMapper candidateMapper;
+    private final CandidateRepository candidateRepository;
+    private final CandidateMapper candidateMapper;
 
-   public List<CandidateResponse> findAllWithExperiences() {
-       return candidateRepository.findAllWithExperiences()
-               .stream()
-               .map(candidateMapper::toCandidateResponse)
-               .collect(Collectors.toList());
-   }
+    @Autowired
+    public CandidateService(CandidateRepository candidateRepository, CandidateMapper candidateMapper) {
+        this.candidateRepository = candidateRepository;
+        this.candidateMapper = candidateMapper;
+    }
 
-   public Optional<CandidateResponse> findByIdWithExperiences(Long id) {
-       return candidateRepository.findByIdWithExperiences(id)
-               .map(candidateMapper::toCandidateResponse);
-   }
+    /** 🔹 Récupérer un candidat par ID */
+    public Optional<CandidateDTO> getById(String id) {
+        return candidateRepository.findById(id)
+                .map(candidateMapper::toDTO);
+    }
 
-    public Optional<CandidateResponse> findByEmail(String email) {
+    /** 🔹 Créer un candidate */
+    public Candidate register(Candidate candidate) {
+        return candidateRepository.save(candidate);
+    }
+
+    /** 🔹 Récupérer un candidat par email */
+    public Optional<CandidateDTO> getByEmail(String email) {
         return candidateRepository.findByEmail(email)
-                .map(candidateMapper::toCandidateResponse);
+                .map(candidateMapper::toDTO);
     }
 
-    public List<CandidateResponse> findBySocialNetwork(String socialName) {
-        return candidateRepository.findBySocialNetwork(socialName)
+    /** 🔹 Rechercher des candidats par nom */
+    public List<CandidateDTO> searchByName(String name) {
+        return candidateRepository.findByFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(name, name)
                 .stream()
-                .map(candidateMapper::toCandidateResponse)
+                .map(candidateMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<CandidateResponse> findByExperienceTitleKeyword(String keyword) {
-        return candidateRepository.findByExperiencesTitleKeyword(keyword)
-                .stream()
-                .map(candidateMapper::toCandidateResponse)
-                .collect(Collectors.toList());
+//    /** 🔹 Récupérer tous les candidats */
+//
+//    public List<CandidateDTO> getAll() {
+//        return candidateRepository.findAll()
+//                .stream()
+//                .map(candidateMapper::toDTO)
+//                .toList();
+//    }
+
+    /** 🔹 Sauvegarder un candidat */
+    public CandidateDTO save(CandidateDTO candidateDTO) {
+        Candidate saved = candidateRepository.save(candidateMapper.toEntity(candidateDTO));
+        return candidateMapper.toDTO(saved);
     }
 
-    public CandidateResponse save(CandidateResponse candidateDTO) {
-        Candidate entity = candidateMapper.toEntity(candidateDTO);
-        return candidateMapper.toCandidateResponse(candidateRepository.save(entity));
+    /** 🔹 Mettre à jour un candidat */
+    public Optional<CandidateDTO> update(String id, CandidateDTO candidateDTO) {
+        return candidateRepository.findById(id)
+                .map(existing -> {
+                    Candidate updated = candidateMapper.toEntity(candidateDTO);
+                    updated.setId(existing.getId()); // Conserver l'ID
+                    return candidateMapper.toDTO(candidateRepository.save(updated));
+                });
     }
 
-    public Optional<CandidateResponse> update(String id, CandidateResponse candidateDTO) {
-        return candidateRepository.findById(id).map(existing -> {
-            Candidate updated = candidateMapper.toEntity(candidateDTO);
-            updated.setId(id);
-            return candidateMapper.toCandidateResponse(candidateRepository.save(updated));
-        });
+    /** 🔹 Supprimer un candidat */
+    public boolean deleteById(String id) {
+        if (candidateRepository.existsById(id)) {
+            candidateRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
-
-    public void delete(String id) {
-        candidateRepository.deleteById(id);
-    }
-
-
-
-    */
 }
-

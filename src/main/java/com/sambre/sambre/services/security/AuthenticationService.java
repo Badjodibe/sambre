@@ -5,7 +5,10 @@ import com.sambre.sambre.config.security.jwt.JwtService;
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
 import com.sambre.sambre.dtos.security.TokenResponse;
+import com.sambre.sambre.entities.enumerations.EmailTemplateName;
 import com.sambre.sambre.entities.user.User;
+import com.sambre.sambre.mapper.user.CandidateMapper;
+import com.sambre.sambre.mapper.user.CompanyMapper;
 import com.sambre.sambre.services.user.CandidateService;
 import com.sambre.sambre.services.user.CompanyService;
 import com.sambre.sambre.services.user.UserService;
@@ -19,24 +22,27 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Optional;
+
+import com.sambre.sambre.dtos.user.CandidateDTO;
+import com.sambre.sambre.dtos.user.CompanyDTO;
+
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    @Autowired
     private final AuthenticationManager authenticationManager;
-    @Autowired
     private final JwtService jwtService;
-    @Autowired
     private final TokenService tokenService;
-    @Autowired
     private final EmailService emailService;
     private final UserService userService;
     private final CandidateService candidateService;
     private final CompanyService companyService;
 
+    private final CandidateMapper candidateMapper;
+    private final CompanyMapper companyMapper;
+
+    /** 🔹 Génération code à 6 chiffres */
     private String generateActivationCode(int length) {
         String characters = "0123456789";
         SecureRandom secureRandom = new SecureRandom();
@@ -48,32 +54,34 @@ public class AuthenticationService {
         return codeBuilder.toString();
     }
 
+    /** 🔹 Génération + sauvegarde token */
     private String generateAndSaveActivationToken(User user) {
         String generatedToken = generateActivationCode(6);
         TokenResponse token = TokenResponse.builder()
                 .createAt(LocalDateTime.now())
                 .expireAt(LocalDateTime.now().plusMinutes(15))
                 .token(generatedToken)
-                .usersId(user.getId())
+                .usersId(user.getId()) // ID en String
                 .build();
         tokenService.save(token);
         return generatedToken;
     }
 
-//    public void sendValidationEmail(User user) throws MessagingException {
-//        String newToken = generateAndSaveActivationToken(user);
-//
-//        String fullName = user.getFirstname() + " " + user.getLastname();
-//
-//        emailService.sendEmail(
-//                user.getEmail(),
-//                fullName,
-//                "Validation de votre compte sur Sambre",
-//                EmailTemplateName.ACTIVATE_ACCOUNT,
-//                newToken
-//        );
-//    }
+    /** 🔹 Envoi mail validation */
+    public void sendValidationEmail(User user) throws MessagingException {
+        String newToken = generateAndSaveActivationToken(user);
+        String fullName = user.getFirstname() + " " + user.getLastname();
 
+        emailService.sendEmail(
+                user.getEmail(),
+                fullName,
+                "Validation de votre compte sur Sambre",
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                newToken
+        );
+    }
+
+    /** 🔹 Authentification */
     public AuthenticateResponse authenticate(AuthenticateRequest request) {
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -87,12 +95,11 @@ public class AuthenticationService {
         var claims = new HashMap<String, Object>();
         claims.put("fullName", user.fullName());
         claims.put("userId", user.getId());
-// Pour une liste d'Enum Role
         claims.put("roles", user.getRoles()
                 .stream()
                 .map(Enum::name)
                 .toList()
-        );// ROLE_RECRUITER ou ROLE_CANDIDATE par exemple
+        );
 
         String jwt = jwtService.generateToken(claims, user);
 
@@ -101,15 +108,12 @@ public class AuthenticationService {
                 .build();
     }
 
-    /*public void activateAccount(String token) throws MessagingException {
+    /** 🔹 Activation compte */
+    public void activateAccount(String token) throws MessagingException {
         TokenResponse savedToken = tokenService.findByToken(token);
-        Optional<User> userOptional = userService.findById(Long.valueOf(savedToken.getUsersId()));
 
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found.");
-        }
-
-        User user = userOptional.get();
+        User user = userService.findById(savedToken.getUsersId())
+                .orElseThrow(() -> new RuntimeException("User not found."));
 
         if (LocalDateTime.now().isAfter(savedToken.getExpireAt())) {
             sendValidationEmail(user);
@@ -119,19 +123,31 @@ public class AuthenticationService {
         userService.activeAccountBlocked(user.getId());
 
         savedToken.setValidateAt(LocalDateTime.now());
-        tokenService.updateToken(savedToken.getId(), savedToken);
+        tokenService.updateToken(savedToken.getUsersId(), savedToken);
     }
 
-
-    public Optional<CandidateResponse> registerCandidate(CandidateRequest candidateRequest) throws MessagingException {
-        return null;
+    /** 🔹 Enregistrement candidat */
+    public CandidateDTO registerCandidate(CandidateDTO candidateRequest) throws MessagingException {
+        var candidate_ = candidateMapper.toEntity(candidateRequest);
+        var candidate = candidateService.register(candidate_);
+        sendValidationEmail(candidate);
+        return candidateMapper.toDTO(candidate);
     }
 
-    public Optional<CompanyResponse> registerCompany(CompanyRequest companyRequest) throws MessagingException {
-   
-        return null;
-
+    /** 🔹 Enregistrement entreprise */
+    public CompanyDTO registerCompany(CompanyDTO companyRequest) throws MessagingException {
+        var company_ = companyMapper.toEntity(companyRequest);
+        var company = companyService.register(company_);
+        sendValidationEmail(company);
+        return companyMapper.toDTO(company);
     }
 
-     */
+//    /** 🔹 Enregistrement admin (candidat avec rôle admin) */
+//    public CandidateDTO registerAdmin(CandidateDTO candidateRequest) throws MessagingException {
+//        var admin = candidateService.register(candidateRequest);
+//        sendValidationEmail(admin);
+//        return candidateMapper.toDTO(admin);
+//    }
+
+
 }

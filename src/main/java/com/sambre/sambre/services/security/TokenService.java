@@ -63,10 +63,11 @@ public class TokenService implements ServiceInterfaceImpl<TokenResponse> {
 
     }
 
-    public TokenResponse updateToken(Long id, TokenResponse tokenDTO){
-        var token = findById(id).get();
+    public TokenResponse updateToken(String id, TokenResponse tokenDTO){
+        var token = findById(id).isPresent()?findById(id).get():null;
 
         if (tokenDTO.getToken() != null){
+            assert token != null;
             token.setToken(token.getToken());
             token.setValidateAt(tokenDTO.getValidateAt());
         }

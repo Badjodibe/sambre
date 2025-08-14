@@ -2,7 +2,9 @@ package com.sambre.sambre.web.user;
 
 
 
+import com.sambre.sambre.dtos.user.CompanyDTO;
 import com.sambre.sambre.entities.user.Company;
+import com.sambre.sambre.mapper.user.CompanyMapper;
 import com.sambre.sambre.services.user.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
-
+    private final CompanyMapper companyMapper;
     @GetMapping
     public ResponseEntity<Iterable<Company>> getAllCompanies() {
         return ResponseEntity.ok(companyService.findAll());
@@ -28,14 +30,15 @@ public class CompanyController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-/*
+
     @PostMapping
-    public ResponseEntity<CompanyResponse> createCompany(@RequestBody CompanyResponse companyRequest) {
-        CompanyResponse created = companyService.save(companyRequest);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyRequest) {
+        var company = companyMapper.toEntity(companyRequest);
+        Company created = companyService.save(company);
+        return ResponseEntity.ok(companyMapper.toDTO(created));
     }
 
- */
+
 
    /*
     @PutMapping("/{id}")
@@ -44,7 +47,6 @@ public class CompanyController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     */
 
     @DeleteMapping("/{id}")
