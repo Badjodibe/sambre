@@ -31,14 +31,14 @@ public class AuthenticationController {
     }
 
     /** 🔹 Inscription Candidat */
-    @PostMapping("/register-candidate")
+    @PostMapping("/registerCandidate")
     public ResponseEntity<CandidateDTO> registerCandidate(@RequestBody @Valid CandidateDTO candidateRequest) throws MessagingException {
         CandidateDTO savedCandidate = authenticationService.registerCandidate(candidateRequest);
         return ResponseEntity.ok(savedCandidate);
     }
 
     /** 🔹 Inscription Entreprise */
-    @PostMapping("/register-company")
+    @PostMapping("/registerCompany")
     public ResponseEntity<CompanyDTO> registerCompany(@RequestBody @Valid CompanyDTO companyRequest) throws MessagingException {
         CompanyDTO savedCompany = authenticationService.registerCompany(companyRequest);
         return ResponseEntity.ok(savedCompany);
@@ -58,7 +58,7 @@ public class AuthenticationController {
     }
 
     /** 🔹 Activation de compte via lien mail */
-    @GetMapping("/validate-email/{token}")
+    @GetMapping("/validateEmail/{token}")
     public ResponseEntity<Void> activateAccount(@PathVariable String token) throws MessagingException {
         authenticationService.activateAccount(token);
         return ResponseEntity.accepted().build();

@@ -21,5 +21,9 @@ public record CandidateDTO(
         List<ExperienceDTO> experiences,
         List<JobApplicationDTO> jobApplications,
         List<EventParticipantDTO> registeredEvents
-) {}
+) {
+    public String toString(){
+        return id + " " + firstname + " " + lastname + " " + tel;
+    }
+}
 

@@ -15,6 +15,7 @@ import com.sambre.sambre.services.user.CompanyService;
 import com.sambre.sambre.services.user.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import com.sambre.sambre.dtos.user.CompanyDTO;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
@@ -143,8 +145,11 @@ public class AuthenticationService {
     /** 🔹 Enregistrement candidat */
     public CandidateDTO registerCandidate(CandidateDTO candidateRequest) throws MessagingException {
         var candidate_ = candidateMapper.toEntity(candidateRequest);
+        log.info("🎯 Candidate entity from entity: {}", candidate_.getTel());
         var candidate = candidateService.register(candidate_);
+        log.info("🎯 Candidate entity from save entity: {}", candidate.getTel());
         String phone = candidateRequest.tel();
+        log.info("🎯 Candidate entity from DTO: {}", candidateRequest.tel());
         String message = sendMessage(phone, candidate);
         return candidateMapper.toDTO(candidate);
     }

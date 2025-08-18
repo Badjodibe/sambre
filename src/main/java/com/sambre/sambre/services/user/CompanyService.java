@@ -5,6 +5,7 @@ import com.sambre.sambre.entities.user.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,6 +89,8 @@ public class CompanyService {
     }
 
     public Company save(Company company) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        company.setDateCreation(currentDateTime);
         return companyRepository.save(company);
     }
 

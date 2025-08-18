@@ -68,7 +68,9 @@ public class User implements UserDetails, Principal {
     @Column(insertable = false)
     private LocalDateTime last_modified;
 
-
+    public String toString(){
+        return id + " " + firstname + " " + lastname + " " + tel;
+    }
 
     @Override
     public String getName() {

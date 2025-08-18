@@ -24,8 +24,7 @@ public class Candidate extends User{
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobApplication> jobApplications;
 
-    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.PERSIST , orphanRemoval = true)
     private List<EventParticipant> registeredEvents;
-
 
 }
