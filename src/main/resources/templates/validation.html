@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f4;
+        }
+
+        .container{
+          max-width: 600px;
+          margin: 10px auto;
+          padding: 20px;
+          background-color: #fff;
+        }
+
+        .logo{
+          border-bottom: 2px solid #ccc;
+          width: 100%;
+        }
+
+        .logo img{
+          width: 50%;
+          margin: 0 auto;
+        }
+
+
+        footer{
+          font-weight: lighter;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <img src="cid:livraixLogo" alt="Sambre" >
+    </div>
+
+    <p th:text=" ${username} + ',' + ' votre compte a bien été validé par Sambre.'"></p>
+    <p>Bienvenue dans votre aventure avec Sambre. Vous pouvez maintenant essayer de vous connectez.</p>
+
+
+    <footer>
+        <p>Fourni par Sambre.</p>
+    </footer>
+</div>
+</body>
+</html>

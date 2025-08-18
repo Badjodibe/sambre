@@ -25,3 +25,24 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: Contacts@samretogo.com
+    password: fylx upcc etkh sbze
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+smsvas:
+  url: "https://smsvas.fr/api/sms"
+  username: "teemirlaurent@yahoo.fr"
+  password: "smsvas@2020"
+  sender: "SAMRE"
+  token : "9-7c41-4a4c-816c-8b7f3"

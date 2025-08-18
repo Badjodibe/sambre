@@ -1,6 +1,7 @@
 package com.sambre.sambre.services.security;
 
 import com.sambre.sambre.config.messaging.email.EmailService;
+import com.sambre.sambre.config.messaging.sms.SmsService;
 import com.sambre.sambre.config.security.jwt.JwtService;
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
@@ -14,7 +15,6 @@ import com.sambre.sambre.services.user.CompanyService;
 import com.sambre.sambre.services.user.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -41,22 +41,27 @@ public class AuthenticationService {
 
     private final CandidateMapper candidateMapper;
     private final CompanyMapper companyMapper;
+    private final SmsService smsVasService;
+
+
 
     /** 🔹 Génération code à 6 chiffres */
-    private String generateActivationCode(int length) {
+    private String generateActivationCode() {
         String characters = "0123456789";
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder codeBuilder = new StringBuilder();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < 6; i++) {
             int index = secureRandom.nextInt(characters.length());
             codeBuilder.append(characters.charAt(index));
         }
         return codeBuilder.toString();
     }
 
+
+
     /** 🔹 Génération + sauvegarde token */
     private String generateAndSaveActivationToken(User user) {
-        String generatedToken = generateActivationCode(6);
+        String generatedToken = generateActivationCode();
         TokenResponse token = TokenResponse.builder()
                 .createAt(LocalDateTime.now())
                 .expireAt(LocalDateTime.now().plusMinutes(15))
@@ -65,6 +70,15 @@ public class AuthenticationService {
                 .build();
         tokenService.save(token);
         return generatedToken;
+    }
+
+    /** send activated sms for activation account **/
+
+    public String sendMessage(String phoneNumber, User user) {
+        String newToken = generateAndSaveActivationToken(user);
+        String fullName = user.getFirstname() + " " + user.getLastname();
+        String message = smsVasService.sendSms(phoneNumber, fullName + " Votre code d'activation de compte est : " + newToken);
+        return newToken;
     }
 
     /** 🔹 Envoi mail validation */
@@ -130,7 +144,8 @@ public class AuthenticationService {
     public CandidateDTO registerCandidate(CandidateDTO candidateRequest) throws MessagingException {
         var candidate_ = candidateMapper.toEntity(candidateRequest);
         var candidate = candidateService.register(candidate_);
-        sendValidationEmail(candidate);
+        String phone = candidateRequest.tel();
+        String message = sendMessage(phone, candidate);
         return candidateMapper.toDTO(candidate);
     }
 
@@ -138,7 +153,8 @@ public class AuthenticationService {
     public CompanyDTO registerCompany(CompanyDTO companyRequest) throws MessagingException {
         var company_ = companyMapper.toEntity(companyRequest);
         var company = companyService.register(company_);
-        sendValidationEmail(company);
+        String phone = companyRequest.tel();
+        String message = sendMessage(phone, company_);
         return companyMapper.toDTO(company);
     }
 

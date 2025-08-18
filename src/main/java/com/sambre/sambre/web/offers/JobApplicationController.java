@@ -1,15 +1,13 @@
 package com.sambre.sambre.web.offers;
 
-
 import com.sambre.sambre.entities.enumerations.ApplicationStatus;
 import com.sambre.sambre.entities.offers.JobApplication;
 import com.sambre.sambre.services.offer.JobApplicationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/job-applications")
@@ -20,79 +18,80 @@ public class JobApplicationController {
 
     /** 🔹 Récupérer toutes les candidatures */
     @GetMapping
-    public List<JobApplication> getAllApplications() {
-        return jobApplicationService.getAllApplications();
+    public ResponseEntity<List<JobApplication>> getAllApplications() {
+        return ResponseEntity.ok(jobApplicationService.getAllApplications());
     }
 
     /** 🔹 Récupérer une candidature par son ID */
     @GetMapping("/{id}")
-    public Optional<JobApplication> getApplicationById(@PathVariable String id) {
-        return jobApplicationService.getApplicationById(id);
+    public ResponseEntity<JobApplication> getApplicationById(@PathVariable String id) {
+        return jobApplicationService.getApplicationById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /** 🔹 Récupérer toutes les candidatures d'une offre */
     @GetMapping("/offer/{jobOfferId}")
-    public List<JobApplication> getApplicationsByJobOfferId(@PathVariable String jobOfferId) {
-        return jobApplicationService.getApplicationsByJobOfferId(jobOfferId);
+    public ResponseEntity<List<JobApplication>> getApplicationsByJobOfferId(@PathVariable String jobOfferId) {
+        return ResponseEntity.ok(jobApplicationService.getApplicationsByJobOfferId(jobOfferId));
     }
 
     /** 🔹 Récupérer toutes les candidatures d'un candidat */
     @GetMapping("/candidate/{candidateId}")
-    public List<JobApplication> getApplicationsByCandidateId(@PathVariable String candidateId) {
-        return jobApplicationService.getApplicationsByCandidateId(candidateId);
+    public ResponseEntity<List<JobApplication>> getApplicationsByCandidateId(@PathVariable String candidateId) {
+        return ResponseEntity.ok(jobApplicationService.getApplicationsByCandidateId(candidateId));
     }
 
     /** 🔹 Récupérer toutes les candidatures par statut */
     @GetMapping("/status/{status}")
-    public List<JobApplication> getApplicationsByStatus(@PathVariable ApplicationStatus status) {
-        return jobApplicationService.getApplicationsByStatus(status);
+    public ResponseEntity<List<JobApplication>> getApplicationsByStatus(@PathVariable ApplicationStatus status) {
+        return ResponseEntity.ok(jobApplicationService.getApplicationsByStatus(status));
     }
 
     /** 🔹 Vérifier si un candidat a déjà postulé à une offre */
     @GetMapping("/exists")
-    public boolean hasCandidateApplied(
+    public ResponseEntity<Boolean> hasCandidateApplied(
             @RequestParam String candidateId,
             @RequestParam String jobOfferId
     ) {
-        return jobApplicationService.hasCandidateApplied(candidateId, jobOfferId);
+        return ResponseEntity.ok(jobApplicationService.hasCandidateApplied(candidateId, jobOfferId));
     }
 
     /** 🔹 Compter le nombre de candidatures pour une offre */
     @GetMapping("/count/{jobOfferId}")
-    public long countApplicationsForJobOffer(@PathVariable String jobOfferId) {
-        return jobApplicationService.countApplicationsForJobOffer(jobOfferId);
+    public ResponseEntity<Long> countApplicationsForJobOffer(@PathVariable String jobOfferId) {
+        return ResponseEntity.ok(jobApplicationService.countApplicationsForJobOffer(jobOfferId));
     }
 
     /** 🔹 Récupérer les candidatures d'un candidat par statut */
     @GetMapping("/candidate/{candidateId}/status/{status}")
-    public List<JobApplication> getCandidateApplicationsByStatus(
+    public ResponseEntity<List<JobApplication>> getCandidateApplicationsByStatus(
             @PathVariable String candidateId,
             @PathVariable ApplicationStatus status
     ) {
-        return jobApplicationService.getCandidateApplicationsByStatus(candidateId, status);
+        return ResponseEntity.ok(jobApplicationService.getCandidateApplicationsByStatus(candidateId, status));
     }
 
     /** 🔹 Récupérer les candidatures d'une offre par statut */
     @GetMapping("/offer/{jobOfferId}/status/{status}")
-    public List<JobApplication> getApplicationsByJobOfferAndStatus(
+    public ResponseEntity<List<JobApplication>> getApplicationsByJobOfferAndStatus(
             @PathVariable String jobOfferId,
             @PathVariable ApplicationStatus status
     ) {
-        return jobApplicationService.getApplicationsByJobOfferAndStatus(jobOfferId, status);
+        return ResponseEntity.ok(jobApplicationService.getApplicationsByJobOfferAndStatus(jobOfferId, status));
     }
 
     /** 🔹 Créer ou mettre à jour une candidature */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public JobApplication createOrUpdateApplication(@RequestBody JobApplication application) {
-        return jobApplicationService.save(application);
+    public ResponseEntity<JobApplication> createOrUpdateApplication(@RequestBody JobApplication application) {
+        JobApplication saved = jobApplicationService.save(application);
+        return ResponseEntity.status(201).body(saved);
     }
 
     /** 🔹 Supprimer une candidature */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteApplication(@PathVariable String id) {
+    public ResponseEntity<Void> deleteApplication(@PathVariable String id) {
         jobApplicationService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
-

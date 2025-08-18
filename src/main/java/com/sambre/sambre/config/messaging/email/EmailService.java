@@ -5,6 +5,7 @@ import com.sambre.sambre.entities.enumerations.EmailTemplateName;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +24,7 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String emailUsername;
+
 
     public EmailService(JavaMailSender emailSender, SpringTemplateEngine templateEngine) {
         this.emailSender = emailSender;
@@ -65,8 +67,6 @@ public class EmailService {
         String template = templateEngine.process(templateName, context);
 
         helper.setText(template, true);
-
-
 
         // Envoi du message
         emailSender.send(mimeMessage);
