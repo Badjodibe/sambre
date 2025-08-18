@@ -29,6 +29,7 @@ public interface CandidateMapper {
     @Mapping(target = "experiences", source = "experiences")
     @Mapping(target = "jobApplications", source = "jobApplications")
     @Mapping(target = "registeredEvents", source = "registeredEvents")
+    @Mapping(target = "fullName", ignore = true)
     CandidateDTO toDTO(Candidate entity);
 
     // DTO -> Entity
