@@ -9,11 +9,11 @@ import java.util.List;
 public interface NotificationRepository extends CrudRepository<Notification, String> {
 
     // Récupérer toutes les notifications d'un utilisateur
-    List<Notification> findByUserId(String userId);
+    List<Notification> findByUserUserId(String userId);
 
     // Récupérer toutes les notifications non lues d'un utilisateur
-    List<Notification> findByUserIdAndReadFalse(String userId);
+    List<Notification> findByUserUserIdAndReadFalse(String userId);
 
     // Supprimer toutes les notifications d'un utilisateur
-    void deleteByUserId(String userId);
+    void deleteByUserUserId(String userId);
 }

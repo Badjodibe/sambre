@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Repository
 public interface EventRepository extends CrudRepository<Event, String> {
 
-    // 🔹 Trouver tous les événements organisés par une entreprise donnée
-    List<Event> findByOrganizerId(String organizerId);
+    // 🔹 Trouver tous les événements organisés par une entreprise donnée (via userId)
+    List<Event> findByOrganizerUserId(String organizerId);
 
     // 🔹 Chercher par titre (contient, insensible à la casse)
     List<Event> findByTitleContainingIgnoreCase(String keyword);
@@ -30,8 +30,8 @@ public interface EventRepository extends CrudRepository<Event, String> {
     @Query("SELECT e FROM Event e WHERE e.endDate < CURRENT_TIMESTAMP ORDER BY e.endDate DESC")
     List<Event> findPastEvents();
 
-    // 🔹 Compter les événements par entreprise
-    long countByOrganizerId(String organizerId);
+    // 🔹 Compter les événements par entreprise (organizer.userId)
+    long countByOrganizerUserId(String organizerId);
 }
 
 

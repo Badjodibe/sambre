@@ -27,7 +27,7 @@ public class JobOfferService {
 
     /** 🔹 Récupérer une offre avec la société */
     public Optional<JobOffer> getWithCompanyById(String id) {
-        return jobOfferRepository.findWithCompanyById(id);
+        return jobOfferRepository.findWithCompanyByJobOfferId(id);
     }
 
     /** 🔹 Recherche par titre */
@@ -36,7 +36,7 @@ public class JobOfferService {
     }
 
     /** 🔹 Recherche par ID société */
-    public List<JobOffer> getByCompanyId(Long companyId) {
+    public List<JobOffer> getByCompanyId(String companyId) {
         return jobOfferRepository.findByCompanyId(companyId);
     }
 
@@ -47,7 +47,7 @@ public class JobOfferService {
 
     /** 🔹 Recherche par type de contrat */
     public List<JobOffer> getByJobType(String contractType) {
-        return jobOfferRepository.findByjobTypeIgnoreCase(contractType);
+        return jobOfferRepository.findByJobTypeIgnoreCase(contractType);
     }
 
     /** 🔹 Créer ou mettre à jour une offre */

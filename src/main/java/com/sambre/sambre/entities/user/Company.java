@@ -12,8 +12,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Company extends User{

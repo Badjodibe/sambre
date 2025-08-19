@@ -17,7 +17,7 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String jobApplicationId;
 
     private String motivation;
 

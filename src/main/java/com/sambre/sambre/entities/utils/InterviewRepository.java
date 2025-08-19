@@ -11,7 +11,7 @@ import java.util.List;
 public interface InterviewRepository extends CrudRepository<Interview, String> {
 
     // Récupérer toutes les interviews pour une JobApplication donnée
-    List<Interview> findByJobApplicationId(String jobApplicationId);
+    List<Interview> findByJobApplicationJobApplicationId(String jobApplicationId);
 
     // Récupérer toutes les interviews programmées après une certaine date
     List<Interview> findByScheduledDateAfter(LocalDateTime date);

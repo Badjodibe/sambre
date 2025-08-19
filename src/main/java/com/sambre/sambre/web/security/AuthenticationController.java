@@ -3,6 +3,7 @@ package com.sambre.sambre.web.security;
 
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
+import com.sambre.sambre.dtos.user.*;
 import com.sambre.sambre.services.security.AuthenticationService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -10,10 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-
-import com.sambre.sambre.dtos.user.CandidateDTO;
-import com.sambre.sambre.dtos.user.CompanyDTO;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -32,15 +29,15 @@ public class AuthenticationController {
 
     /** 🔹 Inscription Candidat */
     @PostMapping("/registerCandidate")
-    public ResponseEntity<CandidateDTO> registerCandidate(@RequestBody @Valid CandidateDTO candidateRequest) throws MessagingException {
-        CandidateDTO savedCandidate = authenticationService.registerCandidate(candidateRequest);
+    public ResponseEntity<CandidateResponse> registerCandidate(@RequestBody @Valid CandidateRequest candidateRequest) throws MessagingException {
+        CandidateResponse savedCandidate = authenticationService.registerCandidate(candidateRequest);
         return ResponseEntity.ok(savedCandidate);
     }
 
     /** 🔹 Inscription Entreprise */
     @PostMapping("/registerCompany")
-    public ResponseEntity<CompanyDTO> registerCompany(@RequestBody @Valid CompanyDTO companyRequest) throws MessagingException {
-        CompanyDTO savedCompany = authenticationService.registerCompany(companyRequest);
+    public ResponseEntity<CompanyResponse> registerCompany(@RequestBody @Valid CompanyRequest companyRequest) throws MessagingException {
+        CompanyResponse savedCompany = authenticationService.registerCompany(companyRequest);
         return ResponseEntity.ok(savedCompany);
     }
 

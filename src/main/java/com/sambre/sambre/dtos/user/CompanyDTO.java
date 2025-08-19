@@ -1,7 +1,6 @@
 package com.sambre.sambre.dtos.user;
 
 
-import com.sambre.sambre.dtos.events.EventDTO;
 import com.sambre.sambre.dtos.offers.JobOfferDTO;
 import com.sambre.sambre.dtos.utils.SocialDTO;
 

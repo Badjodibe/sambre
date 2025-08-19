@@ -18,7 +18,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String eventId;
 
     private String title;
 

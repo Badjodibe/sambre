@@ -28,48 +28,48 @@ public class User implements UserDetails, Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    protected String userId;
 
     //@NotBlank(message = "Le nom ne peut pas être vide ou null")
-    private String lastname;
+    protected String lastname;
 
     //@NotBlank(message = "Le prénom ne peut pas être vide ou null")
-    private String firstname;
+    protected String firstname;
 
     @Column(unique = true)
     //@NotBlank(message = "L'email ne peut pas être vide ou null")
-    private String email;
+    protected String email;
 
     //@NotBlank(message = "Le mot de passe ne peut pas être vide ou null")
-    private String password;
+    protected String password;
 
-    private String state;
+    protected String state;
 
-    private String profile;
+    protected String profile;
 
-    private String tel;
+    protected String tel;
     @OneToMany
-    private List<Social> socials;
+    protected List<Social> socials;
 
     //@NotBlank(message = "Le role ne peut pas être vide ou null")
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
+    protected List<Role> roles;
 
-    private boolean accountLocked;
-    private boolean enabled;
+    protected boolean accountLocked;
+    protected boolean enabled;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime dateCreation;
+    protected LocalDateTime dateCreation;
 
 
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime last_modified;
+    protected LocalDateTime last_modified;
 
     public String toString(){
-        return id + " " + firstname + " " + lastname + " " + tel;
+        return userId + " " + firstname + " " + lastname + " " + tel;
     }
 
     @Override

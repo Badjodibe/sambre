@@ -19,7 +19,8 @@ public class JobOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String jobOfferId;
+
     private String title;
     private String description;
     private String jobType; // Ex: "Full-time", "Part-time", "Contract", "Freelance", "Internship"

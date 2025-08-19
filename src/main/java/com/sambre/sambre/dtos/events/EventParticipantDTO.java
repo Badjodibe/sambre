@@ -7,7 +7,7 @@ import com.sambre.sambre.dtos.user.CandidateDTO;
 import java.time.LocalDateTime;
 
 public record EventParticipantDTO(
-        String id,
+        String eventParticipantId,
         CandidateDTO participant,  // DTO simplifié du candidat
         EventDTO event,            // DTO simplifié de l'événement
         LocalDateTime registrationDate

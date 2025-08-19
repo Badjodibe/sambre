@@ -9,11 +9,11 @@ import java.util.List;
 public interface ReviewRepository extends CrudRepository<Review, String> {
 
     // Récupérer toutes les reviews d'une entreprise
-    List<Review> findByCompanyId(String companyId);
+    List<Review> findByCompanyUserId(String companyId);
 
     // Récupérer toutes les reviews d'un candidat
-    List<Review> findByCandidateId(String candidateId);
+    List<Review> findByCandidateUserId(String candidateId);
 
     // Récupérer toutes les reviews d'une entreprise avec une note minimale
-    List<Review> findByCompanyIdAndRatingGreaterThanEqual(String companyId, int rating);
+    List<Review> findByCompanyUserIdAndRatingGreaterThanEqual(String companyId, int rating);
 }

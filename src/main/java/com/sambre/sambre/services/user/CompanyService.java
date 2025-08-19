@@ -23,7 +23,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public Optional<Company> getById(String id) {
+    public Optional<Company> findById(String id) {
         return companyRepository.findById(id);
     }
 
@@ -57,7 +57,7 @@ public class CompanyService {
     }
 
     public Optional<Company> getWithJobOffersById(String id) {
-        return companyRepository.findWithJobOffersById(id);
+        return companyRepository.findWithJobOffersByUserId(id);
     }
 
     public List<Company> getCompaniesWithMinOffers(int minOffers) {
@@ -102,5 +102,8 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
+    public Company update(String id, Company company){
 
+        return companyRepository.save(company);
+    }
 }

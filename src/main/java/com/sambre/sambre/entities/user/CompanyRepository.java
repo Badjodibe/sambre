@@ -11,24 +11,26 @@ import java.util.Optional;
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, String> {
 
+    Optional<Company> findByUserId(String companyId);
+
     Optional<Company> findByFiscalIdentificationNumber(String fiscalIdentificationNumber);
+
     Optional<Company> findByEmail(String email);
+
     List<Company> findBySector(String sector);
 
     @Query("SELECT c FROM Company c WHERE LOWER(c.sector) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Company> searchBySectorKeyword(String keyword);
 
     boolean existsByFiscalIdentificationNumber(String fiscalIdentificationNumber);
+
     boolean existsByEmail(String email);
 
+    boolean existsByUserId(String companyId);
+
     @EntityGraph(attributePaths = {"jobOffers"})
-    Optional<Company> findWithJobOffersById(String id);
+    Optional<Company> findWithJobOffersByUserId(String companyId);
 
-//    // Solution la plus simple
-//    @EntityGraph(attributePaths = "jobOffers")
-//    List<Company> findAllJobOffers();
-
-    // Ou si tu veux vraiment garder le nom custom :
     @EntityGraph(attributePaths = "jobOffers")
     @Query("SELECT c FROM Company c")
     List<Company> findAllWithJobOffers();

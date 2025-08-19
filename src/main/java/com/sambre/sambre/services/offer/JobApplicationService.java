@@ -28,11 +28,11 @@ public class JobApplicationService {
     }
 
     public List<JobApplication> getApplicationsByJobOfferId(String jobOfferId) {
-        return jobApplicationRepository.findByJobOfferId(jobOfferId);
+        return jobApplicationRepository.findByJobOfferJobOfferId(jobOfferId);
     }
 
     public List<JobApplication> getApplicationsByCandidateId(String candidateId) {
-        return jobApplicationRepository.findByCandidateId(candidateId);
+        return jobApplicationRepository.findByCandidateUserId(candidateId);
     }
 
     public List<JobApplication> getApplicationsByStatus(ApplicationStatus status) {
@@ -40,15 +40,15 @@ public class JobApplicationService {
     }
 
     public boolean hasCandidateApplied(String candidateId, String jobOfferId) {
-        return jobApplicationRepository.existsByCandidateIdAndJobOfferId(candidateId, jobOfferId);
+        return jobApplicationRepository.existsByCandidateUserIdAndJobOfferJobOfferId(candidateId, jobOfferId);
     }
 
     public long countApplicationsForJobOffer(String jobOfferId) {
-        return jobApplicationRepository.countByJobOfferId(jobOfferId);
+        return jobApplicationRepository.countByJobOfferJobOfferId(jobOfferId);
     }
 
     public List<JobApplication> getCandidateApplicationsByStatus(String candidateId, ApplicationStatus status) {
-        return jobApplicationRepository.findByCandidateIdAndStatus(candidateId, status);
+        return jobApplicationRepository.findByCandidateUserIdAndStatus(candidateId, status);
     }
 
 //    public List<JobApplication> searchApplicationsByCoverLetter(String keyword) {
@@ -56,7 +56,7 @@ public class JobApplicationService {
 //    }
 
     public List<JobApplication> getApplicationsByJobOfferAndStatus(String jobOfferId, ApplicationStatus status) {
-        return jobApplicationRepository.findByJobOfferIdAndStatus(jobOfferId, status);
+        return jobApplicationRepository.findByJobOfferJobOfferIdAndStatus(jobOfferId, status);
     }
 
     public JobApplication save(JobApplication application) {

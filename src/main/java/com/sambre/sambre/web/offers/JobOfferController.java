@@ -45,7 +45,7 @@ public class JobOfferController {
 
     /** 🔹 Recherche par société */
     @GetMapping("/company/{companyId}")
-    public ResponseEntity<List<JobOffer>> getByCompanyId(@PathVariable Long companyId) {
+    public ResponseEntity<List<JobOffer>> getByCompanyId(@PathVariable String companyId) {
         return ResponseEntity.ok(jobOfferService.getByCompanyId(companyId));
     }
 
@@ -73,7 +73,7 @@ public class JobOfferController {
         if (jobOfferService.getById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        jobOffer.setId(id);
+        jobOffer.setJobOfferId(id);
         return ResponseEntity.ok(jobOfferService.save(jobOffer));
     }
 

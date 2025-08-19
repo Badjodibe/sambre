@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class SavedJob {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String savedJobId;
 
     @ManyToOne
     private Candidate candidate;

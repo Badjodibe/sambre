@@ -5,7 +5,7 @@ import com.sambre.sambre.entities.enumerations.ApplicationStatus;
 import java.time.LocalDateTime;
 
 public record JobApplicationDTO(
-        String id,
+        String jobApplicationId,
         String motivation,
         LocalDateTime applicationDate, // côté sortie
         String candidateId,

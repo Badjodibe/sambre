@@ -1,7 +1,8 @@
 package com.sambre.sambre.mapper.offer;
 
 
-import com.sambre.sambre.dtos.offers.JobOfferDTO;
+import com.sambre.sambre.dtos.offers.*;
+import com.sambre.sambre.entities.offers.JobApplication;
 import com.sambre.sambre.entities.offers.JobOffer;
 import com.sambre.sambre.entities.user.Company;
 import org.mapstruct.Mapper;
@@ -13,28 +14,16 @@ public interface JobOfferMapper {
 
     JobOfferMapper INSTANCE = Mappers.getMapper(JobOfferMapper.class);
 
-    /**
-     * Mapping de DTO -> Entity
-     * On crée un objet Company uniquement avec l'ID pour éviter de charger toute l'entité.
-     */
-    @Mapping(target = "company", expression = "java(mapCompanyId(dto.companyId()))")
-    @Mapping(target = "jobApplications", ignore = true) // On ignore pour éviter la boucle infinie
-    JobOffer toEntity(JobOfferDTO dto);
+    // 🔹 Request → Entity
+    @Mapping(target = "jobOfferId", ignore = true) // généré par JPA
+    @Mapping(target = "company", ignore = true) // défini dans le service via user connecté
+    @Mapping(target = "jobApplications", ignore = true) // créées après par les candidats
+    //@Mapping(target = "offerStatus", expression = "java(com.sambre.sambre.entities.enumerations.JobOfferStatus.OPEN)")
+    JobOffer toEntity(JobOfferRequest request);
 
-    /**
-     * Mapping de Entity -> DTO
-     * On prend uniquement l'ID de la company.
-     */
-    @Mapping(target = "companyId", source = "company.id")
-    JobOfferDTO toDTO(JobOffer entity);
-
-    /**
-     * Méthode utilitaire pour mapper l'ID de la company en objet Company.
-     */
-    default Company mapCompanyId(String companyId) {
-        if (companyId == null) return null;
-        Company company = new Company();
-        company.setId(companyId);
-        return company;
-    }
+    // 🔹 Entity → Response
+    @Mapping(target = "jobOfferId", source = "jobOfferId")
+    @Mapping(target = "companyId", expression = "java(jobOffer.getCompany() != null ? jobOffer.getCompany().getUserId() : null)")
+    @Mapping(target = "companyName", expression = "java(jobOffer.getCompany() != null ? jobOffer.getCompany().getName() : null)")
+    JobOfferResponse toResponse(JobOffer jobOffer);
 }

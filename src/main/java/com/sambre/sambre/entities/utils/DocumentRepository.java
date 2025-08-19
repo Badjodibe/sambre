@@ -17,8 +17,8 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends CrudRepository<Document, String> {
 
-    // 🔹 Récupérer tous les documents d’un candidat par son ID
-    List<Document> findByCandidate_Id(String candidateId);
+    // 🔹 Récupérer tous les documents d’un candidat par son userId
+    List<Document> findByCandidateUserId(String candidateId);
 
     // 🔹 Récupérer tous les documents d’un candidat (entité Candidate)
     List<Document> findByCandidate(Candidate candidate);
@@ -33,6 +33,6 @@ public interface DocumentRepository extends CrudRepository<Document, String> {
     List<Document> findByNameContainingIgnoreCase(String keyword);
 
     // 🔹 Supprimer tous les documents d’un candidat
-    void deleteByCandidate_Id(String candidateId);
+    void deleteByCandidateUserId(String candidateId);
 }
 

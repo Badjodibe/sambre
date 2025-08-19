@@ -16,16 +16,14 @@ public class EventParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "candidate_id")
-    private Candidate participant;
+    private String eventParticipantId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
     private LocalDateTime registrationDate = LocalDateTime.now();
+    @ManyToOne
+    private Candidate participant;
 }
 

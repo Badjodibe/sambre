@@ -11,23 +11,21 @@ import java.util.List;
 public interface JobApplicationRepository extends CrudRepository<JobApplication, String> {
 
     @EntityGraph(attributePaths = {"candidate", "jobOffer"})
-    List<JobApplication> findByJobOfferId(String jobOfferId);
+    List<JobApplication> findByJobOfferJobOfferId(String jobOfferId);
 
     @EntityGraph(attributePaths = {"candidate", "jobOffer"})
-    List<JobApplication> findByCandidateId(String candidateId);
+    List<JobApplication> findByCandidateUserId(String candidateId);
 
     List<JobApplication> findByStatus(ApplicationStatus status);
 
-    boolean existsByCandidateIdAndJobOfferId(String candidateId, String jobOfferId);
+    boolean existsByCandidateUserIdAndJobOfferJobOfferId(String candidateId, String jobOfferId);
 
-    long countByJobOfferId(String jobOfferId);
+    long countByJobOfferJobOfferId(String jobOfferId);
 
-    List<JobApplication> findByCandidateIdAndStatus(String candidateId, ApplicationStatus status);
-
-    //List<JobApplication> findByCoverLetterContainingIgnoreCase(String keyword);
+    List<JobApplication> findByCandidateUserIdAndStatus(String candidateId, ApplicationStatus status);
 
     @EntityGraph(attributePaths = {"candidate", "jobOffer"})
     List<JobApplication> findAll();
 
-    List<JobApplication> findByJobOfferIdAndStatus(String jobOfferId, ApplicationStatus status);
+    List<JobApplication> findByJobOfferJobOfferIdAndStatus(String jobOfferId, ApplicationStatus status);
 }

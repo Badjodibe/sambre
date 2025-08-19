@@ -2,67 +2,39 @@ package com.sambre.sambre.mapper.user;
 
 import com.sambre.sambre.dtos.user.CandidateDTO;
 import com.sambre.sambre.dtos.user.UserDTO;
+import com.sambre.sambre.dtos.user.UserRequest;
+import com.sambre.sambre.dtos.user.UserResponse;
+import com.sambre.sambre.dtos.utils.SocialRequest;
+import com.sambre.sambre.dtos.utils.SocialResponse;
 import com.sambre.sambre.entities.user.User;
+import com.sambre.sambre.entities.utils.Social;
 import com.sambre.sambre.mapper.utils.SocialMapper;
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 // Mapper pour User
-@Mapper(
-        componentModel = "spring",
-        uses = { SocialMapper.class },
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    CandidateDTO toDTO(User user);
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    User toEntity(CandidateDTO dto);
+    // 🔹 De UserRequest vers User (création)
+    @Mapping(target = "userId", ignore = true) // géré par JPA
+    @Mapping(target = "accountLocked", constant = "false")
+    @Mapping(target = "enabled", constant = "true")
+    @Mapping(target = "password", source = "password")
+    User toEntity(UserRequest request);
 
-    List<CandidateDTO> toResponseList(List<User> users);
+    // 🔹 De User vers UserResponse (retour API)
+    @Mapping(target = "fullName", expression = "java(user.getFirstname() + \" \" + user.getLastname())")
+    UserResponse toResponse(User user);
 
-    // Entity -> DTO
-    @Mappings({
-            @Mapping(target = "roles", expression = "java( user.getRoles()==null ? null : user.getRoles().stream().map(Enum::name).toList() )"),
-            @Mapping(target = "fullName", ignore = true),     // on le calcule après
-            @Mapping(target = "socials", source = "socials"),
-            @Mapping(target = "profile", source = "profile"),
-            @Mapping(target = "email", source = "email")
-            // password n’existe pas dans le DTO => jamais exposé
-    })
-    UserDTO toDto(User user);
+    // 🔹 Mapping SocialRequest ↔ Social
+    Social toEntity(SocialRequest request);
+    SocialResponse toResponse(Social social);
 
-    // DTO -> Entity (attention aux listes)
-    @Mappings({
-            @Mapping(target = "roles", expression = "java( dto.roles()==null ? null : dto.roles().stream().map(Role::valueOf).toList() )"),
-            @Mapping(target = "password", ignore = true),     // on ne set pas le password via DTO
-            @Mapping(target = "accountLocked", ignore = true),
-            @Mapping(target = "enabled", ignore = true),
-            @Mapping(target = "dateCreation", ignore = true),
-            @Mapping(target = "last_modified", ignore = true)
-    })
-    User toEntity(UserDTO dto);
-
-    // Update in-place (PATCH/PUT) sur une entité existante
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mappings({
-            @Mapping(target = "roles", expression = "java( dto.roles()==null ? target.getRoles() : dto.roles().stream().map(Role::valueOf).toList() )"),
-            @Mapping(target = "password", ignore = true),
-            @Mapping(target = "dateCreation", ignore = true),
-            @Mapping(target = "last_modified", ignore = true)
-    })
-    void updateEntityFromDto(UserDTO dto, @MappingTarget User target);
-
-    // Post-traitement pour fullName
-    /*
-    @AfterMapping
-    default void afterToDto(User user, @MappingTarget UserDTO.UserDTOBuilder builder) {
-        String fn = (user.getFirstname()==null ? "" : user.getFirstname()) +
-                " " +
-                (user.getLastname()==null ? "" : user.getLastname());
-        builder.fullName(fn.trim());
-    }
-
-     */
+    List<Social> toSocialEntities(List<SocialRequest> requests);
+    List<SocialResponse> toSocialResponses(List<Social> socials);
 }

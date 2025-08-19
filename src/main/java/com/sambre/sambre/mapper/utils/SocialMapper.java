@@ -7,6 +7,7 @@ import org.mapstruct.*;
 // Mapper pour Social
 @Mapper(componentModel = "spring")
 public interface SocialMapper {
+    SocialMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(SocialMapper.class);
     SocialDTO toDto(Social entity);
     Social toEntity(SocialDTO dto);
 }

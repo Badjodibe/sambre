@@ -6,6 +6,7 @@ import com.sambre.sambre.config.security.jwt.JwtService;
 import com.sambre.sambre.dtos.security.AuthenticateRequest;
 import com.sambre.sambre.dtos.security.AuthenticateResponse;
 import com.sambre.sambre.dtos.security.TokenResponse;
+import com.sambre.sambre.dtos.user.*;
 import com.sambre.sambre.entities.enumerations.EmailTemplateName;
 import com.sambre.sambre.entities.user.User;
 import com.sambre.sambre.mapper.user.CandidateMapper;
@@ -23,9 +24,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-
-import com.sambre.sambre.dtos.user.CandidateDTO;
-import com.sambre.sambre.dtos.user.CompanyDTO;
 
 
 @Service
@@ -68,7 +66,7 @@ public class AuthenticationService {
                 .createAt(LocalDateTime.now())
                 .expireAt(LocalDateTime.now().plusMinutes(15))
                 .token(generatedToken)
-                .usersId(user.getId()) // ID en String
+                .usersId(user.getUserId()) // ID en String
                 .build();
         tokenService.save(token);
         return generatedToken;
@@ -110,7 +108,7 @@ public class AuthenticationService {
 
         var claims = new HashMap<String, Object>();
         claims.put("fullName", user.fullName());
-        claims.put("userId", user.getId());
+        claims.put("userId", user.getUserId());
         claims.put("roles", user.getRoles()
                 .stream()
                 .map(Enum::name)
@@ -136,14 +134,14 @@ public class AuthenticationService {
             throw new RuntimeException("Token expiré. Un nouveau token a été envoyé par email.");
         }
 
-        userService.activeAccountBlocked(user.getId());
+        userService.activeAccountBlocked(user.getUserId());
 
         savedToken.setValidateAt(LocalDateTime.now());
         tokenService.updateToken(savedToken.getUsersId(), savedToken);
     }
 
     /** 🔹 Enregistrement candidat */
-    public CandidateDTO registerCandidate(CandidateDTO candidateRequest) throws MessagingException {
+    public CandidateResponse registerCandidate(CandidateRequest candidateRequest) throws MessagingException {
         var candidate_ = candidateMapper.toEntity(candidateRequest);
         log.info("🎯 Candidate entity from entity: {}", candidate_.getTel());
         var candidate = candidateService.register(candidate_);
@@ -151,16 +149,16 @@ public class AuthenticationService {
         String phone = candidateRequest.tel();
         log.info("🎯 Candidate entity from DTO: {}", candidateRequest.tel());
         String message = sendMessage(phone, candidate);
-        return candidateMapper.toDTO(candidate);
+        return candidateMapper.toResponse(candidate);
     }
 
     /** 🔹 Enregistrement entreprise */
-    public CompanyDTO registerCompany(CompanyDTO companyRequest) throws MessagingException {
+    public CompanyResponse registerCompany(CompanyRequest companyRequest) throws MessagingException {
         var company_ = companyMapper.toEntity(companyRequest);
         var company = companyService.register(company_);
         String phone = companyRequest.tel();
         String message = sendMessage(phone, company_);
-        return companyMapper.toDTO(company);
+        return companyMapper.toResponse(company);
     }
 
 //    /** 🔹 Enregistrement admin (candidat avec rôle admin) */

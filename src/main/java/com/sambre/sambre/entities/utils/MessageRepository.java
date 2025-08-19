@@ -9,18 +9,18 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends CrudRepository<Message, String> {
 
-    // Récupérer tous les messages envoyés par un utilisateur
-    List<Message> findBySenderId(String senderId);
+    // 🔹 Récupérer tous les messages envoyés par un utilisateur
+    List<Message> findBySenderUserId(String senderId);
 
-    // Récupérer tous les messages reçus par un utilisateur
-    List<Message> findByReceiverId(String receiverId);
+    // 🔹 Récupérer tous les messages reçus par un utilisateur
+    List<Message> findByReceiverUserId(String receiverId);
 
-    // Récupérer l'historique des messages entre deux utilisateurs (dans les deux sens)
-    List<Message> findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimestampAsc(
+    // 🔹 Récupérer l'historique des messages entre deux utilisateurs (dans les deux sens)
+    List<Message> findBySenderUserIdAndReceiverUserIdOrSenderUserIdAndReceiverUserIdOrderByTimestampAsc(
             String senderId1, String receiverId1,
             String senderId2, String receiverId2
     );
 
-    // Récupérer les messages contenant un certain mot clé (dans le contenu)
+    // 🔹 Récupérer les messages contenant un certain mot clé (dans le contenu)
     List<Message> findByContentContainingIgnoreCase(String keyword);
 }
