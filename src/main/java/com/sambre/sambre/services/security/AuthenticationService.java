@@ -143,11 +143,8 @@ public class AuthenticationService {
     /** 🔹 Enregistrement candidat */
     public CandidateResponse registerCandidate(CandidateRequest candidateRequest) throws MessagingException {
         var candidate_ = candidateMapper.toEntity(candidateRequest);
-        log.info("🎯 Candidate entity from entity: {}", candidate_.getTel());
         var candidate = candidateService.register(candidate_);
-        log.info("🎯 Candidate entity from save entity: {}", candidate.getTel());
         String phone = candidateRequest.tel();
-        log.info("🎯 Candidate entity from DTO: {}", candidateRequest.tel());
         String message = sendMessage(phone, candidate);
         return candidateMapper.toResponse(candidate);
     }

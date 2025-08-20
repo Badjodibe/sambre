@@ -55,7 +55,7 @@ public class AuthenticationController {
     }
 
     /** 🔹 Activation de compte via lien mail */
-    @GetMapping("/validateEmail/{token}")
+    @GetMapping("/validateAccount/{token}")
     public ResponseEntity<Void> activateAccount(@PathVariable String token) throws MessagingException {
         authenticationService.activateAccount(token);
         return ResponseEntity.accepted().build();

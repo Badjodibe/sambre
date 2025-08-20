@@ -2,6 +2,7 @@ package com.sambre.sambre.services.user;
 
 import com.sambre.sambre.entities.user.Company;
 import com.sambre.sambre.entities.user.CompanyRepository;
+import com.sambre.sambre.util.exception.DuplicateResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class CompanyService {
     }
 
     public Company register(Company company) {
+        if (companyRepository.findByEmail(company.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Un utilisateur avec cet email existe déjà : " + company.getEmail());
+        }
         return companyRepository.save(company);
     }
 

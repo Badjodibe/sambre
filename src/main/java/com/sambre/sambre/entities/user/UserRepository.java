@@ -13,7 +13,6 @@ public interface UserRepository extends CrudRepository<User, String> {
     Optional<User> findByEmail(String userEmail);
     // Pour un rôle unique
     List<User> findByRoles(Role roles);
-
     // Pour plusieurs rôles
     List<User> findByRolesIn(Collection<Role> roles);
 

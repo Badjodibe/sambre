@@ -3,6 +3,7 @@ package com.sambre.sambre.services.user;
 
 import com.sambre.sambre.entities.user.Candidate;
 import com.sambre.sambre.entities.user.CandidateRepository;
+import com.sambre.sambre.util.exception.DuplicateResourceException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class CandidateService {
 
     /** 🔹 Créer un candidat */
     public Candidate register(Candidate candidate) {
+        if (candidateRepository.findByEmail(candidate.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Un utilisateur avec cet email existe déjà : " + candidate.getEmail());
+        }
         candidate.setDateCreation(LocalDateTime.now());
         return candidateRepository.save(candidate);
     }

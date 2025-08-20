@@ -84,7 +84,6 @@ public class UserService {
         if (byId == null){
             throw new EntityNotFoundException("Personne avec l'ID "+ id + " n'existe pas");
         }
-
         byId.setAccountLocked(true);
         userRepository.save(byId);
 

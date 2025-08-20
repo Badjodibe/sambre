@@ -1,15 +1,19 @@
 package com.sambre.sambre.services.security;
 
 
+import com.sambre.sambre.config.security.jwt.JwtService;
 import com.sambre.sambre.config.security.jwt.Token;
 import com.sambre.sambre.config.security.jwt.TokenRepository;
 import com.sambre.sambre.dtos.security.TokenResponse;
+import com.sambre.sambre.entities.user.User;
+import com.sambre.sambre.entities.user.UserRepository;
 import com.sambre.sambre.mapper.security.TokenMapper;
 import com.sambre.sambre.services.ServiceInterfaceImpl;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,8 @@ import java.util.Optional;
 public class TokenService implements ServiceInterfaceImpl<TokenResponse> {
     private final TokenMapper tokenMapper;
     private final TokenRepository tokenRepository;
+    private  final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Override
     public Optional<TokenResponse> save(TokenResponse tokenDTO) {
@@ -71,7 +77,18 @@ public class TokenService implements ServiceInterfaceImpl<TokenResponse> {
             token.setToken(token.getToken());
             token.setValidateAt(tokenDTO.getValidateAt());
         }
+        User user = userRepository.findById(tokenDTO.getUsersId()).isPresent()?userRepository.findById(tokenDTO.getUsersId()).get():null;
+        var claims = new HashMap<String, Object>();
+        claims.put("fullName", user.fullName());
+        claims.put("userId", user.getUserId());
+        claims.put("roles", user.getRoles()
+                .stream()
+                .map(Enum::name)
+                .toList()
+        );
 
+        String jwt = jwtService.generateToken(claims, user);
+        token.setToken(jwt);
         var token1 = tokenRepository.save(tokenMapper.toEntity(token));
 
         return tokenMapper.toDTO(token1);
